@@ -1,37 +1,39 @@
-let instance;
-
 export class Apple {
   constructor(snakes) {
+    this.id = HELPERS.getId();
     this.snakes = snakes;
-    this.position = this.getRandomCoordinates();
-    if(!instance) instance = this;
-    return instance;
+    this.coords = this.getRandomCoordinates();
   }
 
   getRandomCoordinates() {
-    return this.snakes.reduce((acc, snake) => {
-      snake.getSnake().forEach(segment =>  {
+    return this.snakes.reduce((randomCoords, snake) => {
+
+      const snakeCoords = snake.getCoords();
+
+      snakeCoords.forEach(segment => {
         const x = HELPERS.random.getX();
         const y = HELPERS.random.getY();
         if (segment.x !== x && segment.y !== y) {
-          acc.x = x;
-          acc.y = y;
+          randomCoords.x = x;
+          randomCoords.y = y;
         }
       })
-      return acc;
+
+      return randomCoords;
     }, {})
   }
 
-  handleSnakeCollision() {
-    this.snakes.forEach(snake => {
-      if (this.position.x === snake.getSnake()[0].x && this.position.y === snake.getSnake()[0].y) {
-        snake.expand(this.position);
-        instance = null;
-      }
-    })
-  }
+  // handleSnakeCollision() {
+  //   this.snakes.forEach(snake => {
+  //     const snakeHead = snake.getCoords()[0];
+  //     if (this.coords.x === snakeHead.x && this.coords.y === snakeHead.y) {
+  //       snake.expand(this.coords);
+  //
+  //     }
+  //   })
+  // }
 
   render() {
-    HELPERS.drawApple(this.position.x, this.position.y);
+    HELPERS.drawApple(this.coords.x, this.coords.y);
   }
 }

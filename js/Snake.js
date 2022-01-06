@@ -1,13 +1,11 @@
 export class Snake {
   constructor(user) {
+    this.id = HELPERS.getId();
     this.user = user;
-    this.direction = null;
-    this.snake = this.getSnakeObject();
-    this.length = this.user.startLength;
+    this.snake = this.initiateCoordsArray(); // [{x: 20, y: 15}, {x: 19, y: 15}, {x: 18, y: 15}, {x: 17, y: 15}]
+    this.nextStep = null;
     this.prevKey = null;
     this.#listen();
-    console.log(this.length)
-    console.log(this.snake.length)
   }
 
   #listen() {
@@ -16,23 +14,22 @@ export class Snake {
         case this.user.KEYS.UP:
           if (this.prevKey && this.prevKey === this.user.KEYS.DOWN) break;
           this.prevKey = this.user.KEYS.UP;
-          this.direction = {x: 0, y: -1};
+          this.nextStep = {x: 0, y: -1};
           break;
         case this.user.KEYS.DOWN:
           if (this.prevKey && this.prevKey === this.user.KEYS.UP) break;
           this.prevKey = this.user.KEYS.DOWN;
-          this.direction = {x: 0, y: 1};
+          this.nextStep = {x: 0, y: 1};
           break;
         case this.user.KEYS.LEFT:
           if (this.prevKey && this.prevKey === this.user.KEYS.RIGHT) break;
           this.prevKey = this.user.KEYS.LEFT;
-          this.direction = {x: -1, y: 0};
+          this.nextStep = {x: -1, y: 0};
           break;
         case this.user.KEYS.RIGHT:
-          console.log('RIGHT')
           if (this.prevKey && this.prevKey === this.user.KEYS.LEFT) break;
           this.prevKey = this.user.KEYS.LEFT;
-          this.direction = {x: 1, y: 0};
+          this.nextStep = {x: 1, y: 0};
           break;
         default:
           return;
@@ -40,38 +37,50 @@ export class Snake {
     })
   }
 
-  getSnakeObject() {
-    const snake = []
+  initiateCoordsArray() {
+    const snake = [];
     for (let i = 0; i < this.user.startLength; i++) {
       snake.push({
         x: this.user.startPosition.x - i,
         y: this.user.startPosition.y
-      })
+      });
     }
     return snake;
   }
 
-  getSnake() {
+  getCoords() {
     return this.snake;
   }
 
-  expand(position) {
-    this.snake.push(position);
-    this.length += 1;
+  expand(segment) {
+    this.snake.push(segment);
   }
 
   move() {
-    if (this.direction) {
-      for (let i = this.length; i >= 0; i--) {
-        this.snake[i + 1] = {...this.snake[i]}
+    if (this.nextStep) {
+      for (let i = this.snake.length - 2; i >= 0; i--) {
+        this.snake[i + 1] = {...this.snake[i]};
       }
-      this.snake[0].x += this.direction.x;
-      this.snake[0].y += this.direction.y;
+      this.snake[0].x += this.nextStep.x;
+      this.snake[0].y += this.nextStep.y;
+    }
+  }
+
+  isAppleOnSnake(apples){
+    return apples.some(apple => {
+      const snakeHead = this.snake[0];
+      return apple.coords.x === snakeHead.x && apple.coords.y === snakeHead.y;
+    })
+  }
+
+  eatApple(apples) {
+    if (this.isAppleOnSnake(apples)) {
+      this.expand();
     }
   }
 
   render() {
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.snake.length; i++) {
       HELPERS.drawSnakeSegment(this.snake[i].x, this.snake[i].y);
     }
   }
