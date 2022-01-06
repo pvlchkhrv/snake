@@ -15,6 +15,7 @@ const COLOR_APPLE = "#8aa173"
 //описание начальных параметров игрока
 const USERS = [
   {
+    player: 1,
     startPosition: { // начальные координаты игрока в вклетках
       x: 20,
       y: 15
@@ -29,7 +30,4 @@ const USERS = [
   }
 ]
 
-
-const SNAKES = [];
-const APPLES = [];
 const APPLES_COUNT = 3;

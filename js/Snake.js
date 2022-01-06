@@ -5,6 +5,7 @@ export class Snake {
     this.snake = this.initiateCoordsArray(); // [{x: 20, y: 15}, {x: 19, y: 15}, {x: 18, y: 15}, {x: 17, y: 15}]
     this.nextStep = null;
     this.prevKey = null;
+    this.points = 0;
     this.#listen();
   }
 
@@ -54,9 +55,30 @@ export class Snake {
 
   expand(segment) {
     this.snake.push(segment);
+    this.points += 1;
+  }
+
+  hasSelfCollision() {
+    let boolean;
+    for (let i = this.snake.length; i > 0; i--) {
+      boolean = this.snake[0].x === this.snake.x && this.snake[0] === this.snake[i];
+    }
+    return boolean;
+  }
+
+  // hasBorderCollision() {
+  //   this.snake[0].x ===
+  // }
+
+  handleCollisions() {
+    if (this.hasSelfCollision()) {
+      alert('GAME OVER!');
+      location.reload();
+    }
   }
 
   move() {
+    this.handleCollisions();
     if (this.nextStep) {
       for (let i = this.snake.length - 2; i >= 0; i--) {
         this.snake[i + 1] = {...this.snake[i]};
@@ -66,18 +88,19 @@ export class Snake {
     }
   }
 
-  isAppleOnSnake(apples){
-    return apples.some(apple => {
-      const snakeHead = this.snake[0];
-      return apple.coords.x === snakeHead.x && apple.coords.y === snakeHead.y;
-    })
-  }
-
-  eatApple(apples) {
-    if (this.isAppleOnSnake(apples)) {
-      this.expand();
-    }
-  }
+  // appleOnSnake(apples){
+  //   return apples.find(apple => {
+  //     const snakeHead = this.snake[0];
+  //     return apple.coords.x === snakeHead.x && apple.coords.y === snakeHead.y;
+  //   })
+  // }
+  //
+  // eatApple(apples) {
+  //  const eatenApple = this.appleOnSnake(apples);
+  //   if (eatenApple) {
+  //     this.expand();
+  //   }
+  // }
 
   render() {
     for (let i = 0; i < this.snake.length; i++) {

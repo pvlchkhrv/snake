@@ -3,6 +3,7 @@ export class Apple {
     this.id = HELPERS.getId();
     this.snakes = snakes;
     this.coords = this.getRandomCoordinates();
+    this.isEaten = false;
   }
 
   getRandomCoordinates() {
@@ -23,15 +24,15 @@ export class Apple {
     }, {})
   }
 
-  // handleSnakeCollision() {
-  //   this.snakes.forEach(snake => {
-  //     const snakeHead = snake.getCoords()[0];
-  //     if (this.coords.x === snakeHead.x && this.coords.y === snakeHead.y) {
-  //       snake.expand(this.coords);
-  //
-  //     }
-  //   })
-  // }
+  handleSnakeCollision() {
+    this.snakes.forEach(snake => {
+      const snakeHead = snake.getCoords()[0];
+      if (this.coords.x === snakeHead.x && this.coords.y === snakeHead.y) {
+        snake.expand(this.coords);
+        this.isEaten = true;
+      }
+    })
+  }
 
   render() {
     HELPERS.drawApple(this.coords.x, this.coords.y);
