@@ -1,38 +1,31 @@
 import {Snake} from './Snake.js';
 import {Apple} from './Apple.js';
-const PLAYERS = [];
-const SNAKES = [];
 
 init();
+
 gameLoop();
 
-
-
 function init() {
-  USERS.forEach(user => PLAYERS.push(new Snake(user)));
-  PLAYERS.forEach(player => SNAKES.push(player.getSnake()));
+  for (let i = 0; i < APPLES_COUNT; i++) {
+    APPLES.push(new Apple());
+  }
+
+  USERS.forEach(user => SNAKES.push(new Snake(user)));
 }
 
 function gameLoop() {
   HELPERS.clearField();
-  const apple = new Apple(PLAYERS);
-  apple.handleSnakeCollision();
-  apple.render();
-  PLAYERS.forEach(snake => {
-    snake.render();
-    snake.move();
+  if (APPLES.length < APPLES_COUNT) new Apple(SNAKES);
+
+  APPLES.forEach(apple => {
+    apple.render(SNAKES);
   });
 
-
-
-  // пример использования объекта HELPERS
-  // просто рисуем змейку по параметрам из настроек пользователя
-  // и яблоко каждый раз в случайном месте
-  // for (var i = 0; i < USER.startLength; i++) {
-  //     HELPERS.drawSnakeSegment(USER.startPosition.x - i, USER.startPosition.y );
-  // }
-  // HELPERS.drawApple(HELPERS.random.getX(), HELPERS.random.getY());
-  // конец примера
+  SNAKES.forEach(snake => {
+    snake.render();
+    snake.eatApple(APPLES);
+    snake.move();
+  });
 
   setTimeout(gameLoop, TIME_INTERVAL)
 }
