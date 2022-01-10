@@ -3,6 +3,7 @@ export class Snake {
     this.id = HELPERS.getId();
     this.user = user;
     this.snake = this.initiateCoordsArray(); // [{x: 20, y: 15}, {x: 19, y: 15}, {x: 18, y: 15}, {x: 17, y: 15}]
+    this.snakeHead = this.snake[0];
     this.nextStep = null;
     this.prevKey = null;
     this.points = 0;
@@ -13,23 +14,23 @@ export class Snake {
     window.addEventListener('keydown', ({which}) => {
       switch (which) {
         case this.user.KEYS.UP:
-          if (this.prevKey && this.prevKey === this.user.KEYS.DOWN) break;
+          if (this.prevKey === this.user.KEYS.DOWN) break;
           this.prevKey = this.user.KEYS.UP;
           this.nextStep = {x: 0, y: -1};
           break;
         case this.user.KEYS.DOWN:
-          if (this.prevKey && this.prevKey === this.user.KEYS.UP) break;
+          if (this.prevKey === this.user.KEYS.UP) break;
           this.prevKey = this.user.KEYS.DOWN;
           this.nextStep = {x: 0, y: 1};
           break;
         case this.user.KEYS.LEFT:
-          if (this.prevKey && this.prevKey === this.user.KEYS.RIGHT) break;
+          if (this.prevKey === this.user.KEYS.RIGHT) break;
           this.prevKey = this.user.KEYS.LEFT;
           this.nextStep = {x: -1, y: 0};
           break;
         case this.user.KEYS.RIGHT:
-          if (this.prevKey && this.prevKey === this.user.KEYS.LEFT) break;
-          this.prevKey = this.user.KEYS.LEFT;
+          if (this.prevKey === this.user.KEYS.LEFT) break;
+          this.prevKey = this.user.KEYS.RIGHT;
           this.nextStep = {x: 1, y: 0};
           break;
         default:
@@ -53,54 +54,41 @@ export class Snake {
     return this.snake;
   }
 
-  expand(segment) {
-    this.snake.push(segment);
+  expand() {
+    this.snake.push({...this.snake[this.snake.length - 1]});
     this.points += 1;
   }
 
   hasSelfCollision() {
-    let boolean;
-    for (let i = this.snake.length; i > 0; i--) {
-      boolean = this.snake[0].x === this.snake.x && this.snake[0] === this.snake[i];
-    }
-    return boolean;
+    return this.snake.some((segment, index) => {
+      if (index === 0) return false;
+      return HELPERS.isEqualPositions(this.snakeHead, segment);
+    });
   }
 
-  // hasBorderCollision() {
-  //   this.snake[0].x ===
-  // }
+  hasBorderCollision() {
+    return (
+      this.snakeHead.x < 0 || this.snakeHead.x > GAME_WIDTH_IN_BLOCKS ||
+      this.snakeHead.y < 0 || this.snakeHead.y > GAME_HEIGHT_IN_BLOCKS
+    )
+  }
 
-  handleCollisions() {
-    if (this.hasSelfCollision()) {
+  isDead() {
+    if (this.hasBorderCollision() || this.hasSelfCollision()) {
       alert('GAME OVER!');
       location.reload();
     }
   }
 
   move() {
-    this.handleCollisions();
     if (this.nextStep) {
       for (let i = this.snake.length - 2; i >= 0; i--) {
         this.snake[i + 1] = {...this.snake[i]};
       }
-      this.snake[0].x += this.nextStep.x;
-      this.snake[0].y += this.nextStep.y;
+      this.snakeHead.x += this.nextStep.x;
+      this.snakeHead.y += this.nextStep.y;
     }
   }
-
-  // appleOnSnake(apples){
-  //   return apples.find(apple => {
-  //     const snakeHead = this.snake[0];
-  //     return apple.coords.x === snakeHead.x && apple.coords.y === snakeHead.y;
-  //   })
-  // }
-  //
-  // eatApple(apples) {
-  //  const eatenApple = this.appleOnSnake(apples);
-  //   if (eatenApple) {
-  //     this.expand();
-  //   }
-  // }
 
   render() {
     for (let i = 0; i < this.snake.length; i++) {

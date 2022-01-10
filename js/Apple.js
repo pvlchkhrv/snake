@@ -2,11 +2,11 @@ export class Apple {
   constructor(snakes) {
     this.id = HELPERS.getId();
     this.snakes = snakes;
-    this.coords = this.getRandomCoordinates();
+    this.coords = this.getRandomCoords();
     this.isEaten = false;
   }
 
-  getRandomCoordinates() {
+  getRandomCoords() {
     return this.snakes.reduce((randomCoords, snake) => {
 
       const snakeCoords = snake.getCoords();
@@ -26,12 +26,11 @@ export class Apple {
 
   handleSnakeCollision() {
     this.snakes.forEach(snake => {
-      const snakeHead = snake.getCoords()[0];
-      if (this.coords.x === snakeHead.x && this.coords.y === snakeHead.y) {
-        snake.expand(this.coords);
+      if (HELPERS.isEqualPositions(this.coords, snake.snakeHead)) {
+        snake.expand();
         this.isEaten = true;
       }
-    })
+    });
   }
 
   render() {

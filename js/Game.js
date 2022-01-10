@@ -1,5 +1,5 @@
-import {Apple} from "./Apple.js";
-import {Snake} from "./Snake.js";
+import {Apple} from './Apple.js';
+import {Snake} from './Snake.js';
 
 export class Game {
   constructor() {
@@ -21,11 +21,11 @@ export class Game {
       const divElement = document.createElement('div');
       divElement.dataset.id = snake.id;
       pointsElement.append(divElement);
-    })
+    });
   }
 
   updatePoints(snakeId, points, player) {
-    const divElement = document.querySelector(`[data-id="${snakeId}"]`);
+    const divElement = document.querySelector(`[data-id='${snakeId}']`);
     divElement.innerText = `P${player}:${points}`;
   }
 
@@ -33,6 +33,7 @@ export class Game {
     HELPERS.clearField();
     this.snakes.forEach(snake => {
       this.updatePoints(snake.id, snake.points, snake.user.player);
+      snake.isDead();
       snake.render();
       snake.move();
     });

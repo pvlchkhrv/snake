@@ -5,6 +5,8 @@ const BLOCK_SIZE = 20;   // размер одной клетки поля в п�
 
 const GAME_HEIGHT_IN_BLOCKS = GAME_HEIGHT / BLOCK_SIZE - 1; // ширина поля в клетках
 const GAME_WIDTH_IN_BLOCKS = GAME_WIDTH / BLOCK_SIZE - 1;   // высота поля в клетках
+console.log('HEIGHT', GAME_HEIGHT_IN_BLOCKS)
+console.log('WIDTH', GAME_WIDTH_IN_BLOCKS)
 
 const TIME_INTERVAL = 500 // интервал времени перерисовки игрового экрана в милисекундах
 
