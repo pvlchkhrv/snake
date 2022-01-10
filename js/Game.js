@@ -1,5 +1,6 @@
 import {Apple} from './Apple.js';
 import {Snake} from './Snake.js';
+import {SnakeBot} from './SnakeBot.js';
 
 export class Game {
   constructor() {
@@ -8,7 +9,12 @@ export class Game {
   }
 
   init() {
-    this.snakes = USERS.map(user => new Snake(user));
+    this.snakes = USERS.map(user => {
+      if (user.player === 'bot') {
+        return new SnakeBot(user);
+      }
+      return new Snake(user);
+    });
     this.representPoints();
     for (let i = 0; i < APPLES_COUNT; i++) {
       this.apples.push(new Apple(this.snakes));
@@ -33,9 +39,10 @@ export class Game {
     HELPERS.clearField();
     this.snakes.forEach(snake => {
       this.updatePoints(snake.id, snake.points, snake.user.player);
-      snake.isDead(this.snakes);
       snake.render();
       snake.move();
+      snake.handleCollisions(this.snakes);
+      snake.isDead();
     });
 
     this.apples.forEach(apple => {
@@ -48,10 +55,6 @@ export class Game {
       }
     })
 
-    setTimeout(this.update.bind(this), TIME_INTERVAL)
+    setTimeout(this.update.bind(this), TIME_INTERVAL);
   }
 }
-
-
-// TODO
-//  - give isDead mapped snakes

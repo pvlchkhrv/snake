@@ -54,9 +54,27 @@ export class Snake {
     return this.snake;
   }
 
-  expand() {
+  eatApple() {
     this.snake.push({...this.snake[this.snake.length - 1]});
     this.points += POINTS_PER_APPLE;
+  }
+
+  handleCollisions(snakes) {
+    this.handleSnakeCollisions(snakes);
+    this.handleBorderCollisions();
+  }
+
+  handleSnakeCollisions(snakes) {
+    if (this.hasAnotherSnakeCollision(snakes)) {
+      this.snake.pop();
+      this.points -= POINTS_PER_APPLE;
+    }
+  }
+
+  handleBorderCollisions() {
+    if (this.hasBorderCollision()) {
+      this.points -= 5;
+    }
   }
 
   hasSelfCollision() {
@@ -87,12 +105,8 @@ export class Snake {
     return res;
   }
 
-  isDead(snakes) {
-    if (
-      this.hasBorderCollision() ||
-      this.hasSelfCollision() ||
-      this.hasAnotherSnakeCollision(snakes)
-    ) {
+  isDead() {
+    if (this.hasSelfCollision() || this.snake.length === 1) {
       alert('GAME OVER!');
       location.reload();
     }

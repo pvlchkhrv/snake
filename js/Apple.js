@@ -2,7 +2,7 @@ export class Apple {
   constructor(snakes) {
     this.id = HELPERS.getId();
     this.snakes = snakes;
-    this.coords = this.getRandomCoords();
+    this.coords = this.getRandomCoords(); //{x: 1, y: 3}
     this.isEaten = false;
   }
 
@@ -27,7 +27,7 @@ export class Apple {
   handleSnakeCollision() {
     this.snakes.forEach(snake => {
       if (HELPERS.isEqualPositions(this.coords, snake.snakeHead)) {
-        snake.expand();
+        snake.eatApple();
         this.isEaten = true;
       }
     });

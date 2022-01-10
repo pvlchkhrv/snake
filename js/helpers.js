@@ -17,6 +17,7 @@ function Helpers() {
   }
   this.getId = getId;
   this.isEqualPositions = isEqualPositions;
+  this.getRandomDirection = getRandomDirection;
 
   function clearField() {
     ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
@@ -75,6 +76,10 @@ function Helpers() {
 
   function isEqualPositions(position1, position2) {
     return position1.x === position2.x && position1.y === position2.y;
+  }
+
+  function getRandomDirection() {
+    return Math.floor(Math.random() * 4);
   }
 }
 

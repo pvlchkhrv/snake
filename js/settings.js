@@ -44,7 +44,22 @@ const USERS = [
       RIGHT: 68  // d
     }
   },
+  {
+    player: 'bot',
+    startPosition: { // начальные координаты игрока в вклетках
+      x: 10,
+      y: 5
+    },
+    startLength: 4, // начальная длина змеи
+  },
 ]
 
 const APPLES_COUNT = 3;
 const POINTS_PER_APPLE = 10;
+
+const DIRECTIONS = {
+  UP: 0,
+  DOWN: 1,
+  LEFT: 2,
+  RIGHT: 3
+}
