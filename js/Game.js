@@ -33,7 +33,7 @@ export class Game {
     HELPERS.clearField();
     this.snakes.forEach(snake => {
       this.updatePoints(snake.id, snake.points, snake.user.player);
-      snake.isDead();
+      snake.isDead(this.snakes);
       snake.render();
       snake.move();
     });
@@ -51,3 +51,7 @@ export class Game {
     setTimeout(this.update.bind(this), TIME_INTERVAL)
   }
 }
+
+
+// TODO
+//  - give isDead mapped snakes

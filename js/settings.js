@@ -29,7 +29,22 @@ const USERS = [
       LEFT: 37,  // это код стрелки влево
       RIGHT: 39  // это код стрелки вправо
     }
-  }
+  },
+  {
+    player: 2,
+    startPosition: { // начальные координаты игрока в вклетках
+      x: 15,
+      y: 10
+    },
+    startLength: 4, // начальная длина змеи
+    KEYS: {  //коды кнопок управления для этого игрока (посмотреть коды всех кнопок клавиатуры можно тут http://gcctech.org/csc/javascript/javascript_keycodes.htm)
+      UP: 87,    // w
+      DOWN: 83,  // s
+      LEFT: 65,  // a
+      RIGHT: 68  // d
+    }
+  },
 ]
 
 const APPLES_COUNT = 3;
+const POINTS_PER_APPLE = 10;

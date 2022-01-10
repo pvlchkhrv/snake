@@ -56,7 +56,7 @@ export class Snake {
 
   expand() {
     this.snake.push({...this.snake[this.snake.length - 1]});
-    this.points += 1;
+    this.points += POINTS_PER_APPLE;
   }
 
   hasSelfCollision() {
@@ -73,8 +73,26 @@ export class Snake {
     )
   }
 
-  isDead() {
-    if (this.hasBorderCollision() || this.hasSelfCollision()) {
+  hasAnotherSnakeCollision(snakes) {
+    const otherSnakes = snakes.filter(snake => snake.id !== this.id);
+    const snakesWithCoords = otherSnakes.map(snake => snake.snake);
+
+    let res = false;
+
+    for (let i = 0; i < snakesWithCoords.length; i++) {
+      const snake = snakesWithCoords[i];
+      res = snake.some(segment => HELPERS.isEqualPositions(this.snakeHead, segment));
+    }
+
+    return res;
+  }
+
+  isDead(snakes) {
+    if (
+      this.hasBorderCollision() ||
+      this.hasSelfCollision() ||
+      this.hasAnotherSnakeCollision(snakes)
+    ) {
       alert('GAME OVER!');
       location.reload();
     }
