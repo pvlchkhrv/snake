@@ -37,23 +37,27 @@ export class Game {
 
   update() {
     HELPERS.clearField();
-    this.snakes.forEach(snake => {
-      this.updatePoints(snake.id, snake.points, snake.user.player);
-      snake.render();
-      snake.move();
-      snake.handleCollisions(this.snakes);
-      snake.isDead();
-    });
-
     this.apples.forEach(apple => {
       if (!apple.isEaten) {
         apple.render();
         apple.handleSnakeCollision();
+
       } else {
         this.apples = this.apples.filter(({id}) => apple.id !== id);
         this.apples.push(new Apple(this.snakes));
       }
     })
+    this.snakes.forEach(snake => {
+      this.updatePoints(snake.id, snake.points, snake.user.player);
+      if(snake.user.player === 'bot') {
+        snake.findApple(this.apples);
+        snake.chooseDirectionToApple();
+      }
+      snake.move(this.snakes);
+      snake.render();
+      snake.handleCollisions(this.snakes);
+      snake.handleDeath();
+    });
 
     setTimeout(this.update.bind(this), TIME_INTERVAL);
   }
